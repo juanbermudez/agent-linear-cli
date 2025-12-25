@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Changelog - Linear CLI</title>
+  <meta content="Version history and release notes for the Linear CLI." name="description" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+  <link href="../css/docs.css" rel="stylesheet" type="text/css" />
+  <script src="../js/main.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="background-gradient"></div>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="nav-brand">
+          <span class="logo-icon"><i class="fa-solid fa-terminal"></i></span>
+          <span class="logo-text">Linear CLI</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3>Getting Started</h3>
+          <ul>
+            <li><a href="getting-started.html">Installation</a></li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h3>Reference</h3>
+          <ul>
+            <li><a href="commands.html">Commands</a></li>
+            <li><a href="changelog.html" class="active">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h3>On This Page</h3>
+          <ul>
+            <li><a href="#v1.0.0">v1.0.0</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+      <div class="docs-header">
+        <nav class="breadcrumb">
+          <a href="../index.html">Home</a>
+          <span>/</span>
+          <a href="getting-started.html">Docs</a>
+          <span>/</span>
+          <span>Changelog</span>
+        </nav>
+        <button class="mobile-menu-toggle" data-sidebar-toggle>
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <article class="docs-article">
+        <h1><i class="fa-solid fa-clock-rotate-left color-accent"></i> Changelog</h1>
+        <p class="lead">
+          All notable changes to the Linear CLI. This project follows
+          <a href="https://semver.org/">Semantic Versioning</a>.
+        </p>
+
+        <!-- Version 1.0.0 -->
+        <section id="v1.0.0" class="version-section">
+          <div class="version-header">
+            <h2>v1.0.0</h2>
+            <span class="version-date">2025-12-25</span>
+            <span class="version-badge major">Initial Release</span>
+          </div>
+
+          <div class="changelog-category added">
+            <h3><i class="fa-solid fa-plus"></i> Added</h3>
+            <p>Initial release of the Linear CLI - a JSON-first command-line interface for Linear, designed for AI agents.</p>
+
+            <h4>Core Commands</h4>
+            <ul>
+              <li><strong>Issue</strong> - Create, list, view, update, delete, and search issues</li>
+              <li><strong>Project</strong> - Manage projects with milestones and status updates</li>
+              <li><strong>Document</strong> - Create, view, update, delete, and search documents</li>
+              <li><strong>Initiative</strong> - Strategic planning with initiatives that group projects</li>
+            </ul>
+
+            <h4>Utility Commands</h4>
+            <ul>
+              <li><strong>Team</strong> - List teams and team members</li>
+              <li><strong>User</strong> - List and search users</li>
+              <li><strong>Label</strong> - Create, list, update, and delete labels</li>
+              <li><strong>Workflow</strong> - List and cache workflow states</li>
+            </ul>
+
+            <h4>Auth & Config</h4>
+            <ul>
+              <li><strong>auth login/logout/status</strong> - Secure keychain-based authentication</li>
+              <li><strong>config setup</strong> - Interactive setup wizard with stdin support</li>
+              <li><strong>config set/get/list</strong> - Manage configuration</li>
+              <li><strong>whoami</strong> - Display current user info</li>
+            </ul>
+
+            <h4>Features</h4>
+            <ul>
+              <li><strong>JSON-first output</strong> - Structured output for AI agents</li>
+              <li><strong>--human flag</strong> - Readable tables for terminal use</li>
+              <li><strong>Error hints</strong> - Helpful hints and usage examples in error responses</li>
+              <li><strong>24-hour caching</strong> - Workflows, statuses, users, and labels</li>
+              <li><strong>Secure credential storage</strong> - System keychain integration</li>
+              <li><strong>Stdin support</strong> - Non-interactive setup for AI agents</li>
+            </ul>
+          </div>
+
+          <div class="changelog-summary">
+            <h4>Initial Release Summary</h4>
+            <table class="docs-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Commands</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Issue</td><td>create, list, view, update, delete, search, comment, attachment, relate</td></tr>
+                <tr><td>Project</td><td>create, list, view, update, delete, restore, milestone, update-status</td></tr>
+                <tr><td>Document</td><td>create, list, view, update, delete, restore, search</td></tr>
+                <tr><td>Initiative</td><td>create, list, view, update, archive, restore, project-add, project-remove</td></tr>
+                <tr><td>Utility</td><td>team, user, label, workflow, status</td></tr>
+                <tr><td>Config</td><td>auth, config, whoami</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </article>
+    </main>
+  </div>
+
+  <script>
+    document.querySelector('[data-sidebar-toggle]')?.addEventListener('click', () => {
+      document.querySelector('.docs-sidebar').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>

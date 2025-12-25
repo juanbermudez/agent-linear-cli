@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Linear CLI - Command-Line Interface for Linear</title>
+  <meta content="A powerful command-line interface for Linear, designed for AI agents with JSON-first output and human-readable modes." name="description" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Linear CLI" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Linear CLI - Command-Line Interface for Linear" />
+  <meta property="og:description" content="JSON-first CLI for Linear. Manage issues, projects, documents, and initiatives from your terminal." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Linear CLI" />
+  <meta name="twitter:description" content="A powerful command-line interface for Linear with JSON output for AI agents." />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <script src="js/main.js" type="text/javascript" defer></script>
+
+  <!-- Feature card styles -->
+  <style>
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-xxl);
+    }
+    @media (min-width: 768px) {
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .feature-card {
+      display: flex;
+      gap: var(--space-l);
+      padding: var(--space-xl);
+      background: var(--color-background);
+      border-radius: var(--radius-l);
+      border: 1.5px solid transparent;
+      background-image: linear-gradient(var(--color-background), var(--color-background)), linear-gradient(135deg, var(--color-accent-light), var(--color-border));
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-accent);
+      box-shadow: 0 8px 24px rgba(129, 140, 248, 0.2);
+    }
+    .feature-icon {
+      flex-shrink: 0;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+      border-radius: var(--radius-l);
+      font-size: 36px;
+      color: var(--color-on-accent);
+      box-shadow: 0 8px 20px rgba(129, 140, 248, 0.3);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(129, 140, 248, 0.5);
+    }
+    .feature-content h3 {
+      margin: 0 0 var(--space-xs) 0;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+    }
+    .feature-tagline {
+      margin: 0 0 var(--space-m) 0;
+      font-size: 16px;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+      font-style: italic;
+    }
+    .feature-description {
+      margin: 0 0 var(--space-l) 0;
+      font-size: 15px;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+    }
+    .feature-commands {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+    }
+    .command-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 12px;
+      background-color: var(--color-surface-hover);
+      color: var(--color-text-secondary);
+      border-radius: var(--radius-s);
+      border: 1px solid var(--color-border);
+      transition: all 0.25s ease;
+      font-weight: 500;
+    }
+    .command-tag:hover {
+      background: linear-gradient(135deg, var(--color-accent-lighter), var(--color-surface-hover));
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    @media (max-width: 767px) {
+      .feature-card { flex-direction: column; text-align: center; }
+      .feature-icon { margin: 0 auto; }
+      .feature-commands { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-gradient"></div>
+  <div class="page-container">
+    <header class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="logo-icon"><i class="fa-solid fa-terminal"></i></span>
+        <span class="logo-text">Linear CLI</span>
+      </a>
+      <nav role="navigation" class="nav-menu" data-navigation>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#commands" class="nav-link">Commands</a>
+        <a href="pages/getting-started.html" class="nav-link">Docs</a>
+      </nav>
+      <div class="button-group">
+        <a href="https://github.com/juanbermudez/linear-agent-cli-go" class="button ghost compact hide-on-mobile">
+          <div class="fa-brands fa-github icon l"></div>
+        </a>
+        <a href="#install" class="button primary compact">Install</a>
+        <button class="button ghost compact nav-hamburger" data-mobile-toggle aria-label="Show menu">
+          <span class="fa-solid fa-bars icon m"></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-decoration"></div>
+        <div class="heading hero centered">
+          <a href="https://github.com/juanbermudez/linear-agent-cli-go/releases" class="eyebrow">
+            <i class="fa-solid fa-rocket"></i> Version 1.0.0
+          </a>
+          <h1 class="balanced" style="margin-bottom: 32px;">
+            Linear from Your Terminal. JSON-First for AI Agents.
+          </h1>
+          <p class="paragraph m secondary balanced" style="margin-bottom: 32px;">
+            A powerful command-line interface for Linear. Manage issues, projects, documents, and initiatives with structured JSON output designed for AI agents. Add <code>--human</code> for readable output. That's it: one CLI, two modes, complete Linear control.
+          </p>
+          <div class="button-group margin-paragraph centered">
+            <a href="#install" class="button primary">
+              <i class="fa-solid fa-download"></i> Install CLI
+            </a>
+            <a href="pages/getting-started.html" class="button tertiary">
+              <i class="fa-solid fa-book"></i> Read the Docs
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="stats-section">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
+            <div class="stat-number">Issue</div>
+            <div class="stat-label">Full CRUD + Search</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="stat-number">Project</div>
+            <div class="stat-label">Milestones & Updates</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="stat-number">Document</div>
+            <div class="stat-label">Create & Search</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-flag"></i></div>
+            <div class="stat-number">Initiative</div>
+            <div class="stat-label">Strategic Planning</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="philosophy-section">
+        <div class="heading centered">
+          <h2 class="no-top-margin" style="font-size: 42px; margin-bottom: 16px;">Built for AI Agents</h2>
+          <p class="paragraph l secondary balanced" style="font-size: 21px; line-height: 1.6; font-weight: 500;">
+            JSON-first output with structured error responses. Every command returns consistent schemas that AI agents can parse and act on. Add <code>--human</code> for readable tables when you're at the terminal.
+          </p>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-ticket"></i></div>
+            <div class="feature-content">
+              <h3>Issues</h3>
+              <p class="feature-tagline">Complete issue lifecycle management</p>
+              <p class="feature-description">
+                Create, update, search, and manage issues. Add comments and attachments. Create relationships between issues. Start work with automatic branch creation and state updates.
+              </p>
+              <div class="feature-commands">
+                <span class="command-tag">issue create</span>
+                <span class="command-tag">issue list</span>
+                <span class="command-tag">issue view</span>
+                <span class="command-tag">issue update</span>
+                <span class="command-tag">issue search</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="feature-content">
+              <h3>Projects</h3>
+              <p class="feature-tagline">Organize work with milestones and status updates</p>
+              <p class="feature-description">
+                Create projects with teams, leads, and dates. Track progress with milestones and status updates. Create associated documents automatically with <code>--with-doc</code>.
+              </p>
+              <div class="feature-commands">
+                <span class="command-tag">project create</span>
+                <span class="command-tag">project list</span>
+                <span class="command-tag">project milestone</span>
+                <span class="command-tag">project update-status</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="feature-content">
+              <h3>Documents</h3>
+              <p class="feature-tagline">Specs, PRDs, and knowledge bases</p>
+              <p class="feature-description">
+                Create and manage Linear documents. Attach to projects or initiatives. Full markdown support with search across your entire document library.
+              </p>
+              <div class="feature-commands">
+                <span class="command-tag">document create</span>
+                <span class="command-tag">document view</span>
+                <span class="command-tag">document search</span>
+                <span class="command-tag">document list</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-flag"></i></div>
+            <div class="feature-content">
+              <h3>Initiatives</h3>
+              <p class="feature-tagline">Strategic planning across projects</p>
+              <p class="feature-description">
+                Create initiatives to group related projects. Set owners, target dates, and track status. Add and remove projects as your strategy evolves.
+              </p>
+              <div class="feature-commands">
+                <span class="command-tag">initiative create</span>
+                <span class="command-tag">initiative list</span>
+                <span class="command-tag">initiative project-add</span>
+                <span class="command-tag">initiative project-remove</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Commands Section -->
+      <section id="commands">
+        <div class="heading">
+          <h2 class="no-top-margin">
+            <i class="fa-solid fa-terminal color-accent"></i> Command Reference
+          </h2>
+          <p class="paragraph m secondary">
+            Every command outputs JSON by default. Add <code>--human</code> for readable tables and formatted output. Error responses include hints and usage examples to guide AI agents.
+          </p>
+        </div>
+
+        <!-- Core Commands -->
+        <div class="command-category">
+          <h3><i class="fa-solid fa-code"></i> Core Commands</h3>
+          <div class="grid columns-2">
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear issue</code>
+                <span class="command-type-badge">core</span>
+              </div>
+              <p class="command-description">Create, list, view, update, delete, and search issues. Manage comments, attachments, and relationships.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear project</code>
+                <span class="command-type-badge">core</span>
+              </div>
+              <p class="command-description">Manage projects with milestones and status updates. Create with associated documents.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear document</code>
+                <span class="command-type-badge">core</span>
+              </div>
+              <p class="command-description">Create, view, update, and search documents. Attach to projects or manage standalone.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear initiative</code>
+                <span class="command-type-badge">core</span>
+              </div>
+              <p class="command-description">Strategic planning with initiatives. Add projects, set owners, track progress.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utility Commands -->
+        <div class="command-category">
+          <h3><i class="fa-solid fa-wrench"></i> Utility Commands</h3>
+          <div class="grid columns-2">
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear team</code>
+                <span class="command-type-badge">utility</span>
+              </div>
+              <p class="command-description">List teams and team members in your workspace.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear user</code>
+                <span class="command-type-badge">utility</span>
+              </div>
+              <p class="command-description">List and search users in your workspace.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear label</code>
+                <span class="command-type-badge">utility</span>
+              </div>
+              <p class="command-description">Create, list, update, and delete issue labels.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear workflow</code>
+                <span class="command-type-badge">utility</span>
+              </div>
+              <p class="command-description">List and cache workflow states for a team.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Auth Commands -->
+        <div class="command-category">
+          <h3><i class="fa-solid fa-key"></i> Auth & Config</h3>
+          <div class="grid columns-2">
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear auth login</code>
+                <span class="command-type-badge">auth</span>
+              </div>
+              <p class="command-description">Authenticate with your Linear API key. Stored securely in system keychain.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear config setup</code>
+                <span class="command-type-badge">config</span>
+              </div>
+              <p class="command-description">Interactive setup wizard. Configure API key and default team.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear whoami</code>
+                <span class="command-type-badge">auth</span>
+              </div>
+              <p class="command-description">Display current authenticated user information.</p>
+            </div>
+            <div class="command-card">
+              <div class="command-header">
+                <code class="command-name">linear config set</code>
+                <span class="command-type-badge">config</span>
+              </div>
+              <p class="command-description">Set configuration values like default team.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Installation Section -->
+      <section id="install" class="install-section">
+        <div class="heading centered">
+          <h2 class="no-top-margin">Install in Seconds</h2>
+          <p class="paragraph m secondary">
+            One command to install. One command to authenticate. You're ready.
+          </p>
+        </div>
+
+        <div class="install-steps">
+          <div class="install-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Install the CLI</h3>
+              <div class="card-code-block">
+                <pre><code># Using Go
+go install github.com/juanbermudez/linear-agent-cli-go/cmd/linear@latest
+
+# Or download binary from releases
+curl -sSL https://github.com/juanbermudez/linear-agent-cli-go/releases/latest/download/linear-$(uname -s)-$(uname -m) -o /usr/local/bin/linear
+chmod +x /usr/local/bin/linear</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Authenticate</h3>
+              <div class="card-code-block">
+                <pre><code># Interactive setup (recommended)
+linear config setup
+
+# Or login directly with API key
+linear auth login --api-key lin_api_xxxxx --team ENG</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Start Using</h3>
+              <div class="card-code-block">
+                <pre><code># List your issues
+linear issue list --human
+
+# Create an issue
+linear issue create --title "Fix login bug" --team ENG
+
+# View issue details
+linear issue view ENG-123</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section id="faq">
+        <div class="heading centered">
+          <h2 class="no-top-margin">Frequently Asked Questions</h2>
+        </div>
+        <div class="accordion-container">
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-toggle">
+              <p class="paragraph m bold">Why JSON-first output?</p>
+              <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+            </summary>
+            <div class="accordion-content">
+              <p>
+                This CLI is designed for AI agents that need structured, parseable output. JSON provides consistent schemas that agents can rely on. Every response includes success status, data, and helpful error hints. Add <code>--human</code> for readable tables when you're at the terminal.
+              </p>
+            </div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-toggle">
+              <p class="paragraph m bold">How are credentials stored?</p>
+              <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+            </summary>
+            <div class="accordion-content">
+              <p>
+                Your Linear API key is stored in your system's secure keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service). It never touches disk in plaintext. You can also use the <code>LINEAR_API_KEY</code> environment variable or pass <code>--api-key</code> directly.
+              </p>
+            </div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-toggle">
+              <p class="paragraph m bold">What about caching?</p>
+              <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+            </summary>
+            <div class="accordion-content">
+              <p>
+                The CLI caches workflows, statuses, users, and labels for 24 hours to reduce API calls. Use <code>linear workflow cache</code> or <code>linear status cache</code> to force a refresh. Cache files are stored in <code>~/.cache/linear-cli/</code>.
+              </p>
+            </div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-toggle">
+              <p class="paragraph m bold">Can I use this with Claude Code or other AI tools?</p>
+              <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+            </summary>
+            <div class="accordion-content">
+              <p>
+                Absolutely. That's the primary use case. The JSON output with consistent schemas, helpful error hints, and usage examples makes it ideal for AI agents. Claude Code can call these commands directly and parse the responses reliably.
+              </p>
+            </div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-toggle">
+              <p class="paragraph m bold">Where do I get a Linear API key?</p>
+              <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+            </summary>
+            <div class="accordion-content">
+              <p>
+                Go to Linear &rarr; Settings &rarr; API &rarr; Personal API keys. Create a new key with the permissions you need. The key starts with <code>lin_api_</code>. Keep it secret!
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="promo-cta">
+        <div class="heading centered">
+          <span class="cta-badge"><i class="fa-solid fa-terminal"></i> Open Source</span>
+          <h2>Linear from Your Terminal. JSON for AI Agents.</h2>
+          <p class="paragraph m cta-subheading">
+            <strong>Manage your entire Linear workspace from the command line.</strong> Issues, projects, documents, initiatives. JSON output for AI agents, human-readable tables for you.
+          </p>
+          <div class="button-group margin-paragraph centered">
+            <a href="#install" class="button primary cta-primary">
+              <i class="fa-solid fa-download"></i> Install Now
+              <span class="button-arrow">&rarr;</span>
+            </a>
+            <a href="https://github.com/juanbermudez/linear-agent-cli-go" class="button tertiary cta-secondary">
+              <i class="fa-brands fa-github"></i> View on GitHub
+            </a>
+          </div>
+          <p class="cta-trust">Built for AI agents. Works great for humans too.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-menu">
+        <div>
+          <p class="paragraph s">
+            &copy; 2025 Linear CLI<br />
+            Built with <a href="https://launchkit.evilmartians.io" target="_blank">LaunchKit</a> template
+          </p>
+        </div>
+        <div>
+          <div class="link-list">
+            <a href="#features" class="ui s">Features</a>
+            <a href="#commands" class="ui s">Commands</a>
+            <a href="pages/getting-started.html" class="ui s">Documentation</a>
+          </div>
+        </div>
+        <div>
+          <div class="link-list">
+            <a href="https://github.com/juanbermudez/linear-agent-cli-go" class="icon-link ui s" target="_blank">
+              <div class="fa-brands fa-github icon m color-accent"></div>
+              <div class="pseudo-link">GitHub</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+
+</html>

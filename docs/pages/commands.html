@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Command Reference - Linear CLI</title>
+  <meta content="Complete reference for all Linear CLI commands including issues, projects, documents, and initiatives." name="description" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+  <link href="../css/docs.css" rel="stylesheet" type="text/css" />
+  <script src="../js/main.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="background-gradient"></div>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="nav-brand">
+          <span class="logo-icon"><i class="fa-solid fa-terminal"></i></span>
+          <span class="logo-text">Linear CLI</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3>Getting Started</h3>
+          <ul>
+            <li><a href="getting-started.html">Installation</a></li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h3>Commands</h3>
+          <ul>
+            <li><a href="#issue-commands">Issue</a></li>
+            <li><a href="#project-commands">Project</a></li>
+            <li><a href="#document-commands">Document</a></li>
+            <li><a href="#initiative-commands">Initiative</a></li>
+            <li><a href="#team-commands">Team</a></li>
+            <li><a href="#user-commands">User</a></li>
+            <li><a href="#label-commands">Label</a></li>
+            <li><a href="#workflow-commands">Workflow</a></li>
+            <li><a href="#auth-commands">Auth</a></li>
+            <li><a href="#config-commands">Config</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+      <div class="docs-header">
+        <nav class="breadcrumb">
+          <a href="../index.html">Home</a>
+          <span>/</span>
+          <a href="getting-started.html">Docs</a>
+          <span>/</span>
+          <span>Commands</span>
+        </nav>
+        <button class="mobile-menu-toggle" data-sidebar-toggle>
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <article class="docs-article">
+        <h1><i class="fa-solid fa-terminal color-accent"></i> Command Reference</h1>
+        <p class="lead">
+          Complete reference for all Linear CLI commands. Every command outputs JSON by default. Add <code>--human</code> for readable tables. Error responses include hints and usage examples to help AI agents self-correct.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <div class="callout-content">
+            <h4>Global Flags</h4>
+            <p>
+              <code>--human</code> - Human-readable output instead of JSON<br>
+              <code>--api-key</code> - Override API key for this command<br>
+              <code>--team</code> - Override default team for this command
+            </p>
+          </div>
+        </div>
+
+        <!-- Issue Commands -->
+        <section id="issue-commands">
+          <h2><i class="fa-solid fa-ticket"></i> Issue Commands</h2>
+          <p>Create, manage, and search issues in your Linear workspace.</p>
+
+          <div class="command-detail" id="issue-create">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue create</code>
+              <span class="command-type-badge">create</span>
+            </div>
+            <p class="command-detail-description">Create a new issue.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th><th>Required</th></tr></thead>
+              <tbody>
+                <tr><td><code>--title, -t</code></td><td>Issue title</td><td>Yes</td></tr>
+                <tr><td><code>--description, -d</code></td><td>Issue description (markdown)</td><td>No</td></tr>
+                <tr><td><code>--team</code></td><td>Team key (e.g., ENG)</td><td>Yes*</td></tr>
+                <tr><td><code>--assignee, -a</code></td><td>Assignee username or 'self'</td><td>No</td></tr>
+                <tr><td><code>--priority</code></td><td>Priority (0-4: none, urgent, high, medium, low)</td><td>No</td></tr>
+                <tr><td><code>--estimate</code></td><td>Estimate points</td><td>No</td></tr>
+                <tr><td><code>--label, -l</code></td><td>Label name (repeatable)</td><td>No</td></tr>
+                <tr><td><code>--state, -s</code></td><td>Initial state name</td><td>No</td></tr>
+                <tr><td><code>--project</code></td><td>Project ID or name</td><td>No</td></tr>
+                <tr><td><code>--parent, -p</code></td><td>Parent issue identifier</td><td>No</td></tr>
+                <tr><td><code>--due-date</code></td><td>Due date (YYYY-MM-DD)</td><td>No</td></tr>
+              </tbody>
+            </table>
+            <p><small>* Required unless default team is configured</small></p>
+            <div class="card-code-block">
+              <pre><code>linear issue create --title "Fix login bug" --team ENG --priority 2
+
+linear issue create \
+  --title "Add OAuth support" \
+  --description "Implement Google and GitHub OAuth" \
+  --team ENG \
+  --assignee self \
+  --label feature \
+  --label auth</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List issues with optional filters.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--team</code></td><td>Filter by team key</td></tr>
+                <tr><td><code>--state, -s</code></td><td>Filter by state type (repeatable): triage, backlog, unstarted, started, completed, canceled</td></tr>
+                <tr><td><code>--all-states</code></td><td>Include all states</td></tr>
+                <tr><td><code>--assignee</code></td><td>Filter by assignee</td></tr>
+                <tr><td><code>--all-assignees, -A</code></td><td>Include all assignees</td></tr>
+                <tr><td><code>--unassigned, -U</code></td><td>Only unassigned issues</td></tr>
+                <tr><td><code>--limit</code></td><td>Maximum results (default: 50)</td></tr>
+                <tr><td><code>--sort</code></td><td>Sort order: manual, priority</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear issue list --team ENG --human
+
+linear issue list --team ENG --state started --state unstarted
+
+linear issue list --team ENG --assignee self --limit 10</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-view">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue view &lt;identifier&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">View issue details.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--web</code></td><td>Open in web browser</td></tr>
+                <tr><td><code>--app</code></td><td>Open in Linear app</td></tr>
+                <tr><td><code>--no-comments</code></td><td>Don't include comments</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear issue view ENG-123
+
+linear issue view ENG-123 --human
+
+linear issue view ENG-123 --web</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-update">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue update &lt;identifier&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Update an existing issue.</p>
+            <h4>Flags</h4>
+            <p>Same as <code>issue create</code> (all optional, at least one required)</p>
+            <div class="card-code-block">
+              <pre><code>linear issue update ENG-123 --state "In Progress"
+
+linear issue update ENG-123 --priority 1 --assignee john</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-delete">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue delete &lt;identifier&gt;</code>
+              <span class="command-type-badge">delete</span>
+            </div>
+            <p class="command-detail-description">Delete an issue.</p>
+            <div class="card-code-block">
+              <pre><code>linear issue delete ENG-123</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-search">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue search &lt;query&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">Search issues by text.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--team</code></td><td>Filter by team</td></tr>
+                <tr><td><code>--limit</code></td><td>Maximum results</td></tr>
+                <tr><td><code>--include-archived</code></td><td>Include archived issues</td></tr>
+                <tr><td><code>--include-comments</code></td><td>Search in comments too</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear issue search "authentication bug"
+
+linear issue search "login" --team ENG --limit 10 --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-comment">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue comment</code>
+              <span class="command-type-badge">create/read</span>
+            </div>
+            <p class="command-detail-description">Manage issue comments.</p>
+            <div class="card-code-block">
+              <pre><code># Create a comment
+linear issue comment create ENG-123 --body "Fixed in commit abc123"
+
+# List comments
+linear issue comment list ENG-123 --limit 10</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-attachment">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue attachment</code>
+              <span class="command-type-badge">create/read/delete</span>
+            </div>
+            <p class="command-detail-description">Manage issue attachments.</p>
+            <div class="card-code-block">
+              <pre><code># Create an attachment
+linear issue attachment create ENG-123 \
+  --title "Design Doc" \
+  --url "https://docs.google.com/..."
+
+# List attachments
+linear issue attachment list ENG-123
+
+# Delete attachment
+linear issue attachment delete ENG-123 ATTACHMENT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="issue-relate">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear issue relate</code>
+              <span class="command-type-badge">create/delete</span>
+            </div>
+            <p class="command-detail-description">Manage issue relationships.</p>
+            <div class="card-code-block">
+              <pre><code># Create relationship
+linear issue relate ENG-123 ENG-456 --blocks
+linear issue relate ENG-123 ENG-456 --related-to
+linear issue relate ENG-123 ENG-456 --duplicate-of
+
+# Remove relationship
+linear issue unrelate ENG-123 ENG-456
+
+# List relationships
+linear issue relations ENG-123</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Project Commands -->
+        <section id="project-commands">
+          <h2><i class="fa-solid fa-folder-open"></i> Project Commands</h2>
+          <p>Create and manage projects with milestones and status updates.</p>
+
+          <div class="command-detail" id="project-create">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project create</code>
+              <span class="command-type-badge">create</span>
+            </div>
+            <p class="command-detail-description">Create a new project.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th><th>Required</th></tr></thead>
+              <tbody>
+                <tr><td><code>--name</code></td><td>Project name</td><td>Yes</td></tr>
+                <tr><td><code>--description</code></td><td>Project description</td><td>No</td></tr>
+                <tr><td><code>--content</code></td><td>Project content (markdown)</td><td>No</td></tr>
+                <tr><td><code>--team</code></td><td>Team key (repeatable)</td><td>Yes*</td></tr>
+                <tr><td><code>--status</code></td><td>Initial status</td><td>No</td></tr>
+                <tr><td><code>--lead</code></td><td>Project lead username</td><td>No</td></tr>
+                <tr><td><code>--priority</code></td><td>Priority (0-4)</td><td>No</td></tr>
+                <tr><td><code>--start-date</code></td><td>Start date (YYYY-MM-DD)</td><td>No</td></tr>
+                <tr><td><code>--target-date</code></td><td>Target date (YYYY-MM-DD)</td><td>No</td></tr>
+                <tr><td><code>--with-doc</code></td><td>Create associated document</td><td>No</td></tr>
+                <tr><td><code>--doc-title</code></td><td>Document title (with --with-doc)</td><td>No</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear project create --name "Q1 Auth Overhaul" --team ENG
+
+linear project create \
+  --name "API Redesign" \
+  --team ENG \
+  --lead john \
+  --target-date 2025-03-31 \
+  --with-doc \
+  --doc-title "API Redesign Spec"</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List projects.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--team</code></td><td>Filter by team</td></tr>
+                <tr><td><code>--all-teams</code></td><td>Include all teams</td></tr>
+                <tr><td><code>--status</code></td><td>Filter by status</td></tr>
+                <tr><td><code>--limit</code></td><td>Maximum results</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear project list --human
+
+linear project list --team ENG --status "In Progress"</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-view">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project view &lt;id&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">View project details.</p>
+            <div class="card-code-block">
+              <pre><code>linear project view PROJECT_ID --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-update">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project update &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Update a project.</p>
+            <div class="card-code-block">
+              <pre><code>linear project update PROJECT_ID --status "In Progress"
+
+linear project update PROJECT_ID --target-date 2025-04-15</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-delete">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project delete &lt;id&gt;</code>
+              <span class="command-type-badge">delete</span>
+            </div>
+            <p class="command-detail-description">Archive a project.</p>
+            <div class="card-code-block">
+              <pre><code>linear project delete PROJECT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-restore">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project restore &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Restore an archived project.</p>
+            <div class="card-code-block">
+              <pre><code>linear project restore PROJECT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-milestone">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project milestone</code>
+              <span class="command-type-badge">create/read/update/delete</span>
+            </div>
+            <p class="command-detail-description">Manage project milestones.</p>
+            <div class="card-code-block">
+              <pre><code># Create milestone
+linear project milestone create PROJECT_ID \
+  --name "Phase 1: OAuth" \
+  --target-date 2025-02-15
+
+# List milestones
+linear project milestone list PROJECT_ID
+
+# Update milestone
+linear project milestone update MILESTONE_ID --name "Phase 1 Complete"
+
+# Delete milestone
+linear project milestone delete MILESTONE_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="project-update-status">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear project update-status</code>
+              <span class="command-type-badge">create/read</span>
+            </div>
+            <p class="command-detail-description">Manage project status updates (changelog).</p>
+            <div class="card-code-block">
+              <pre><code># Create status update
+linear project update-status create PROJECT_ID \
+  --body "Completed OAuth integration" \
+  --health onTrack
+
+# List status updates
+linear project update-status list PROJECT_ID</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Document Commands -->
+        <section id="document-commands">
+          <h2><i class="fa-solid fa-file-lines"></i> Document Commands</h2>
+          <p>Create and manage Linear documents.</p>
+
+          <div class="command-detail" id="document-create">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document create</code>
+              <span class="command-type-badge">create</span>
+            </div>
+            <p class="command-detail-description">Create a new document.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th><th>Required</th></tr></thead>
+              <tbody>
+                <tr><td><code>--title, -t</code></td><td>Document title</td><td>Yes</td></tr>
+                <tr><td><code>--content, -c</code></td><td>Document content (markdown)</td><td>No</td></tr>
+                <tr><td><code>--project, -p</code></td><td>Attach to project ID</td><td>No</td></tr>
+                <tr><td><code>--icon, -i</code></td><td>Icon emoji</td><td>No</td></tr>
+                <tr><td><code>--color</code></td><td>Color (#RRGGBB)</td><td>No</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear document create --title "API Design Doc"
+
+linear document create \
+  --title "Auth Spec" \
+  --content "# Overview\n\nThis document..." \
+  --project PROJECT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List documents.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--project, -p</code></td><td>Filter by project</td></tr>
+                <tr><td><code>--initiative, -i</code></td><td>Filter by initiative</td></tr>
+                <tr><td><code>--creator, -c</code></td><td>Filter by creator</td></tr>
+                <tr><td><code>--include-archived</code></td><td>Include archived</td></tr>
+                <tr><td><code>--limit, -l</code></td><td>Maximum results</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear document list --human
+
+linear document list --project PROJECT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-view">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document view &lt;id&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">View document details.</p>
+            <div class="card-code-block">
+              <pre><code>linear document view DOC_ID --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-update">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document update &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Update a document.</p>
+            <div class="card-code-block">
+              <pre><code>linear document update DOC_ID --title "New Title"
+
+linear document update DOC_ID --content "# Updated content..."</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-delete">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document delete &lt;id&gt;</code>
+              <span class="command-type-badge">delete</span>
+            </div>
+            <p class="command-detail-description">Archive a document.</p>
+            <div class="card-code-block">
+              <pre><code>linear document delete DOC_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-restore">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document restore &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Restore an archived document.</p>
+            <div class="card-code-block">
+              <pre><code>linear document restore DOC_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="document-search">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear document search &lt;term&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">Search documents.</p>
+            <div class="card-code-block">
+              <pre><code>linear document search "authentication"
+
+linear document search "API" --limit 10 --human</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Initiative Commands -->
+        <section id="initiative-commands">
+          <h2><i class="fa-solid fa-flag"></i> Initiative Commands</h2>
+          <p>Strategic planning with initiatives that group related projects.</p>
+
+          <div class="command-detail" id="initiative-create">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative create</code>
+              <span class="command-type-badge">create</span>
+            </div>
+            <p class="command-detail-description">Create a new initiative.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th><th>Required</th></tr></thead>
+              <tbody>
+                <tr><td><code>--name, -n</code></td><td>Initiative name</td><td>Yes</td></tr>
+                <tr><td><code>--description, -d</code></td><td>Description</td><td>No</td></tr>
+                <tr><td><code>--content, -c</code></td><td>Content (markdown)</td><td>No</td></tr>
+                <tr><td><code>--status, -s</code></td><td>Status: Planned, Active, Completed</td><td>No</td></tr>
+                <tr><td><code>--owner, -o</code></td><td>Owner username</td><td>No</td></tr>
+                <tr><td><code>--target-date, -t</code></td><td>Target date (YYYY-MM-DD)</td><td>No</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear initiative create --name "Q1 Platform Improvements"
+
+linear initiative create \
+  --name "Security Hardening" \
+  --status Active \
+  --owner john \
+  --target-date 2025-03-31</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List initiatives.</p>
+            <div class="card-code-block">
+              <pre><code>linear initiative list --human
+
+linear initiative list --status Active</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-view">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative view &lt;id&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">View initiative details.</p>
+            <div class="card-code-block">
+              <pre><code>linear initiative view INIT_ID --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-update">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative update &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Update an initiative.</p>
+            <div class="card-code-block">
+              <pre><code>linear initiative update INIT_ID --status Completed</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-archive">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative archive &lt;id&gt;</code>
+              <span class="command-type-badge">delete</span>
+            </div>
+            <p class="command-detail-description">Archive an initiative.</p>
+            <div class="card-code-block">
+              <pre><code>linear initiative archive INIT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-restore">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative restore &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Restore an archived initiative.</p>
+            <div class="card-code-block">
+              <pre><code>linear initiative restore INIT_ID</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="initiative-project">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear initiative project-add/remove</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Manage initiative projects.</p>
+            <div class="card-code-block">
+              <pre><code># Add project to initiative
+linear initiative project-add INIT_ID PROJECT_ID
+
+# Remove project from initiative
+linear initiative project-remove INIT_ID PROJECT_ID</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Team Commands -->
+        <section id="team-commands">
+          <h2><i class="fa-solid fa-users"></i> Team Commands</h2>
+          <p>List teams and team members.</p>
+
+          <div class="command-detail" id="team-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear team list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List all teams.</p>
+            <div class="card-code-block">
+              <pre><code>linear team list --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="team-members">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear team members [key]</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List team members.</p>
+            <div class="card-code-block">
+              <pre><code>linear team members ENG --human</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- User Commands -->
+        <section id="user-commands">
+          <h2><i class="fa-solid fa-user"></i> User Commands</h2>
+          <p>List and search users in your workspace.</p>
+
+          <div class="command-detail" id="user-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear user list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List all users.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--active-only</code></td><td>Only active users</td></tr>
+                <tr><td><code>--admins-only</code></td><td>Only admin users</td></tr>
+                <tr><td><code>--refresh</code></td><td>Force cache refresh</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear user list --human
+
+linear user list --active-only</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="user-search">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear user search &lt;query&gt;</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">Search users by name or email.</p>
+            <div class="card-code-block">
+              <pre><code>linear user search "john"
+
+linear user search "@company.com" --human</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Label Commands -->
+        <section id="label-commands">
+          <h2><i class="fa-solid fa-tag"></i> Label Commands</h2>
+          <p>Manage issue labels.</p>
+
+          <div class="command-detail" id="label-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear label list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List labels.</p>
+            <div class="card-code-block">
+              <pre><code>linear label list --team ENG --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="label-create">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear label create</code>
+              <span class="command-type-badge">create</span>
+            </div>
+            <p class="command-detail-description">Create a new label.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--name, -n</code></td><td>Label name (required)</td></tr>
+                <tr><td><code>--description, -d</code></td><td>Description</td></tr>
+                <tr><td><code>--color, -c</code></td><td>Color (#RRGGBB)</td></tr>
+                <tr><td><code>--team, -t</code></td><td>Team (for team labels)</td></tr>
+                <tr><td><code>--parent, -p</code></td><td>Parent label ID</td></tr>
+                <tr><td><code>--is-group</code></td><td>Create as label group</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear label create --name "bug" --color "#FF0000" --team ENG</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="label-update">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear label update &lt;id&gt;</code>
+              <span class="command-type-badge">update</span>
+            </div>
+            <p class="command-detail-description">Update a label.</p>
+            <div class="card-code-block">
+              <pre><code>linear label update LABEL_ID --name "critical-bug" --color "#FF0000"</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="label-delete">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear label delete &lt;id&gt;</code>
+              <span class="command-type-badge">delete</span>
+            </div>
+            <p class="command-detail-description">Delete a label.</p>
+            <div class="card-code-block">
+              <pre><code>linear label delete LABEL_ID</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Workflow Commands -->
+        <section id="workflow-commands">
+          <h2><i class="fa-solid fa-diagram-project"></i> Workflow Commands</h2>
+          <p>List and cache workflow states.</p>
+
+          <div class="command-detail" id="workflow-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear workflow list</code>
+              <span class="command-type-badge">read</span>
+            </div>
+            <p class="command-detail-description">List workflow states for a team.</p>
+            <div class="card-code-block">
+              <pre><code>linear workflow list --team ENG --human</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="workflow-cache">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear workflow cache</code>
+              <span class="command-type-badge">utility</span>
+            </div>
+            <p class="command-detail-description">Refresh workflow cache.</p>
+            <div class="card-code-block">
+              <pre><code>linear workflow cache --team ENG</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Auth Commands -->
+        <section id="auth-commands">
+          <h2><i class="fa-solid fa-key"></i> Auth Commands</h2>
+          <p>Manage authentication.</p>
+
+          <div class="command-detail" id="auth-login">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear auth login</code>
+              <span class="command-type-badge">auth</span>
+            </div>
+            <p class="command-detail-description">Authenticate with Linear.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--api-key</code></td><td>API key (lin_api_*)</td></tr>
+                <tr><td><code>--team</code></td><td>Set default team after login</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code>linear auth login --api-key lin_api_xxxxx
+
+linear auth login --api-key lin_api_xxxxx --team ENG</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="auth-logout">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear auth logout</code>
+              <span class="command-type-badge">auth</span>
+            </div>
+            <p class="command-detail-description">Remove stored credentials.</p>
+            <div class="card-code-block">
+              <pre><code>linear auth logout</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="auth-status">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear auth status</code>
+              <span class="command-type-badge">auth</span>
+            </div>
+            <p class="command-detail-description">Check authentication status.</p>
+            <div class="card-code-block">
+              <pre><code>linear auth status</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="whoami">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear whoami</code>
+              <span class="command-type-badge">auth</span>
+            </div>
+            <p class="command-detail-description">Display current user info.</p>
+            <div class="card-code-block">
+              <pre><code>linear whoami
+
+linear whoami --human</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Config Commands -->
+        <section id="config-commands">
+          <h2><i class="fa-solid fa-gear"></i> Config Commands</h2>
+          <p>Manage CLI configuration.</p>
+
+          <div class="command-detail" id="config-setup">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear config setup</code>
+              <span class="command-type-badge">setup</span>
+            </div>
+            <p class="command-detail-description">Interactive setup wizard.</p>
+            <h4>Flags</h4>
+            <table class="docs-table">
+              <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>--api-key</code></td><td>API key</td></tr>
+                <tr><td><code>--team</code></td><td>Default team</td></tr>
+                <tr><td><code>--stdin</code></td><td>Read API key from stdin</td></tr>
+                <tr><td><code>--validate</code></td><td>Validate key without storing</td></tr>
+              </tbody>
+            </table>
+            <div class="card-code-block">
+              <pre><code># Interactive
+linear config setup
+
+# Non-interactive (for AI agents)
+echo "lin_api_xxxxx" | linear config setup --stdin --team ENG</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="config-set">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear config set &lt;key&gt; &lt;value&gt;</code>
+              <span class="command-type-badge">config</span>
+            </div>
+            <p class="command-detail-description">Set a config value.</p>
+            <div class="card-code-block">
+              <pre><code>linear config set team_key ENG</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="config-get">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear config get &lt;key&gt;</code>
+              <span class="command-type-badge">config</span>
+            </div>
+            <p class="command-detail-description">Get a config value.</p>
+            <div class="card-code-block">
+              <pre><code>linear config get team_key</code></pre>
+            </div>
+          </div>
+
+          <div class="command-detail" id="config-list">
+            <div class="command-detail-header">
+              <code class="command-detail-name">linear config list</code>
+              <span class="command-type-badge">config</span>
+            </div>
+            <p class="command-detail-description">List all config values.</p>
+            <div class="card-code-block">
+              <pre><code>linear config list</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="docs-nav-footer">
+          <a href="getting-started.html" class="nav-prev">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title"><i class="fa-solid fa-arrow-left"></i> Getting Started</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    document.querySelector('[data-sidebar-toggle]')?.addEventListener('click', () => {
+      document.querySelector('.docs-sidebar').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>

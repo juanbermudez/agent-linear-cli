@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Getting Started - Linear CLI</title>
+  <meta content="Complete guide to installing and using the Linear CLI for managing your Linear workspace from the terminal." name="description" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+  <link href="../css/docs.css" rel="stylesheet" type="text/css" />
+  <script src="../js/main.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="background-gradient"></div>
+  <div class="docs-layout">
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="nav-brand">
+          <span class="logo-icon"><i class="fa-solid fa-terminal"></i></span>
+          <span class="logo-text">Linear CLI</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3>Getting Started</h3>
+          <ul>
+            <li><a href="#installation" class="active">Installation</a></li>
+            <li><a href="#authentication">Authentication</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#configuration">Configuration</a></li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h3>Core Concepts</h3>
+          <ul>
+            <li><a href="#output-modes">Output Modes</a></li>
+            <li><a href="#error-handling">Error Handling</a></li>
+            <li><a href="#caching">Caching</a></li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h3>Reference</h3>
+          <ul>
+            <li><a href="commands.html">Command Reference</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <div class="docs-header">
+        <nav class="breadcrumb">
+          <a href="../index.html">Home</a>
+          <span>/</span>
+          <span>Getting Started</span>
+        </nav>
+        <button class="mobile-menu-toggle" data-sidebar-toggle>
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <article class="docs-article">
+        <h1>Getting Started with Linear CLI</h1>
+        <p class="lead">
+          In five minutes you'll be managing your Linear workspace from the terminal. The CLI outputs JSON by default for AI agents, or add <code>--human</code> for readable tables. Let's get you set up.
+        </p>
+
+        <!-- Installation Section -->
+        <section id="installation">
+          <h2><i class="fa-solid fa-download"></i> Installation</h2>
+
+          <h3>Prerequisites</h3>
+          <ul>
+            <li>Go 1.21+ (for building from source)</li>
+            <li>A <a href="https://linear.app" target="_blank">Linear</a> account with API access</li>
+          </ul>
+
+          <h3>Option 1: Go Install (Recommended)</h3>
+          <p>If you have Go installed, this is the fastest way:</p>
+          <div class="card-code-block">
+            <pre><code>go install github.com/juanbermudez/linear-agent-cli-go/cmd/linear@latest</code></pre>
+          </div>
+
+          <h3>Option 2: Download Binary</h3>
+          <p>Download the pre-built binary for your platform:</p>
+          <div class="card-code-block">
+            <pre><code># macOS/Linux
+curl -sSL https://github.com/juanbermudez/linear-agent-cli-go/releases/latest/download/linear-$(uname -s)-$(uname -m) -o /usr/local/bin/linear
+chmod +x /usr/local/bin/linear
+
+# Verify installation
+linear --version</code></pre>
+          </div>
+
+          <h3>Option 3: Build from Source</h3>
+          <div class="card-code-block">
+            <pre><code>git clone https://github.com/juanbermudez/linear-agent-cli-go.git
+cd linear-agent-cli-go
+make build
+make install</code></pre>
+          </div>
+        </section>
+
+        <!-- Authentication Section -->
+        <section id="authentication">
+          <h2><i class="fa-solid fa-key"></i> Authentication</h2>
+
+          <h3>Get Your API Key</h3>
+          <ol>
+            <li>Go to <a href="https://linear.app" target="_blank">Linear</a></li>
+            <li>Click your avatar &rarr; Settings</li>
+            <li>Navigate to API &rarr; Personal API keys</li>
+            <li>Create a new key (it starts with <code>lin_api_</code>)</li>
+          </ol>
+
+          <h3>Option 1: Interactive Setup (Recommended)</h3>
+          <p>The setup wizard guides you through authentication and team selection:</p>
+          <div class="card-code-block">
+            <pre><code>linear config setup</code></pre>
+          </div>
+
+          <h3>Option 2: Direct Login</h3>
+          <p>Authenticate directly with your API key:</p>
+          <div class="card-code-block">
+            <pre><code># Login and set default team
+linear auth login --api-key lin_api_xxxxx --team ENG
+
+# Or just login (set team later)
+linear auth login --api-key lin_api_xxxxx</code></pre>
+          </div>
+
+          <h3>Option 3: Environment Variable</h3>
+          <p>For CI/CD or scripting, use the environment variable:</p>
+          <div class="card-code-block">
+            <pre><code>export LINEAR_API_KEY=lin_api_xxxxx
+linear whoami</code></pre>
+          </div>
+
+          <h3>Option 4: Stdin (for AI Agents)</h3>
+          <p>Pass the API key via stdin for non-interactive setup:</p>
+          <div class="card-code-block">
+            <pre><code>echo "lin_api_xxxxx" | linear config setup --stdin --team ENG</code></pre>
+          </div>
+
+          <div class="callout callout-info">
+            <div class="callout-icon"><i class="fa-solid fa-circle-info"></i></div>
+            <div class="callout-content">
+              <h4>Credential Storage</h4>
+              <p>
+                Your API key is stored securely in your system's keychain (macOS Keychain, Windows Credential Manager, or Linux Secret Service). It never touches disk in plaintext.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Start Section -->
+        <section id="quick-start">
+          <h2><i class="fa-solid fa-rocket"></i> Quick Start</h2>
+
+          <h3>Check Your Auth</h3>
+          <div class="card-code-block">
+            <pre><code># See who you're logged in as
+linear whoami
+
+# JSON output (default)
+{
+  "id": "user-123",
+  "name": "Your Name",
+  "email": "you@company.com",
+  "admin": true
+}</code></pre>
+          </div>
+
+          <h3>List Your Issues</h3>
+          <div class="card-code-block">
+            <pre><code># JSON output (default)
+linear issue list --team ENG
+
+# Human-readable table
+linear issue list --team ENG --human
+
+# Filter by state
+linear issue list --team ENG --state started --human</code></pre>
+          </div>
+
+          <h3>Create an Issue</h3>
+          <div class="card-code-block">
+            <pre><code># Basic issue
+linear issue create --title "Fix login bug" --team ENG
+
+# With more details
+linear issue create \
+  --title "Add user authentication" \
+  --description "Implement OAuth2 login flow" \
+  --team ENG \
+  --priority 2 \
+  --label "feature"</code></pre>
+          </div>
+
+          <h3>View an Issue</h3>
+          <div class="card-code-block">
+            <pre><code># By identifier
+linear issue view ENG-123
+
+# Human-readable format
+linear issue view ENG-123 --human</code></pre>
+          </div>
+
+          <h3>Search Issues</h3>
+          <div class="card-code-block">
+            <pre><code># Search across all issues
+linear issue search "authentication bug"
+
+# Limit results
+linear issue search "login" --limit 5 --human</code></pre>
+          </div>
+
+          <h3>Work with Projects</h3>
+          <div class="card-code-block">
+            <pre><code># List projects
+linear project list --human
+
+# Create a project with a document
+linear project create \
+  --name "Q1 Auth Overhaul" \
+  --team ENG \
+  --with-doc \
+  --doc-title "Auth Overhaul Spec"
+
+# Add a milestone
+linear project milestone create PROJECT_ID \
+  --name "Phase 1: OAuth" \
+  --target-date 2025-02-15</code></pre>
+          </div>
+
+          <h3>Manage Documents</h3>
+          <div class="card-code-block">
+            <pre><code># Create a document
+linear document create \
+  --title "API Design Doc" \
+  --content "# Overview\n\nThis document describes..."
+
+# Search documents
+linear document search "authentication"
+
+# View a document
+linear document view DOC_ID --human</code></pre>
+          </div>
+        </section>
+
+        <!-- Configuration Section -->
+        <section id="configuration">
+          <h2><i class="fa-solid fa-gear"></i> Configuration</h2>
+
+          <h3>Config File Location</h3>
+          <p>Configuration is stored in <code>.linear.toml</code> in your project root or home directory:</p>
+          <div class="card-code-block">
+            <pre><code># .linear.toml
+team_key = "ENG"</code></pre>
+          </div>
+
+          <h3>Setting Configuration</h3>
+          <div class="card-code-block">
+            <pre><code># Set default team
+linear config set team_key ENG
+
+# Get a config value
+linear config get team_key
+
+# List all config
+linear config list</code></pre>
+          </div>
+
+          <h3>Configuration Priority</h3>
+          <p>Configuration is resolved in this order (highest to lowest priority):</p>
+          <ol>
+            <li>Command-line flags (<code>--team ENG</code>)</li>
+            <li>Environment variables (<code>LINEAR_TEAM_KEY</code>)</li>
+            <li>Local config file (<code>./.linear.toml</code>)</li>
+            <li>Global config file (<code>~/.linear.toml</code>)</li>
+          </ol>
+        </section>
+
+        <!-- Output Modes Section -->
+        <section id="output-modes">
+          <h2><i class="fa-solid fa-display"></i> Output Modes</h2>
+
+          <h3>JSON Output (Default)</h3>
+          <p>Every command outputs JSON by default, designed for AI agents and scripting:</p>
+          <div class="card-code-block">
+            <pre><code>linear issue list --team ENG
+{
+  "issues": {
+    "nodes": [
+      {
+        "id": "issue-123",
+        "identifier": "ENG-45",
+        "title": "Fix login bug",
+        "priority": 2,
+        "state": {"name": "In Progress", "type": "started"}
+      }
+    ]
+  }
+}</code></pre>
+          </div>
+
+          <h3>Human-Readable Output</h3>
+          <p>Add <code>--human</code> for formatted tables and readable output:</p>
+          <div class="card-code-block">
+            <pre><code>linear issue list --team ENG --human
+
+ID       TITLE            PRIORITY  STATE        ASSIGNEE  UPDATED
+ENG-45   Fix login bug    High      In Progress  JD        2 hours ago
+ENG-44   Add OAuth        Medium    Todo         --        1 day ago</code></pre>
+          </div>
+        </section>
+
+        <!-- Error Handling Section -->
+        <section id="error-handling">
+          <h2><i class="fa-solid fa-triangle-exclamation"></i> Error Handling</h2>
+
+          <p>Errors include structured information to help AI agents self-correct:</p>
+          <div class="card-code-block">
+            <pre><code>{
+  "success": false,
+  "error": {
+    "code": "MISSING_TEAM",
+    "message": "Team is required",
+    "hint": "Specify a team using --team flag or set a default team",
+    "usage": [
+      "linear issue list --team ENG",
+      "linear config set team_key ENG"
+    ]
+  }
+}</code></pre>
+          </div>
+
+          <h3>Common Error Codes</h3>
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Resolution</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>NOT_AUTHENTICATED</code></td>
+                <td>No valid API key found</td>
+                <td>Run <code>linear auth login</code></td>
+              </tr>
+              <tr>
+                <td><code>MISSING_TEAM</code></td>
+                <td>Team required but not specified</td>
+                <td>Add <code>--team</code> or set default</td>
+              </tr>
+              <tr>
+                <td><code>NOT_FOUND</code></td>
+                <td>Resource doesn't exist</td>
+                <td>Check the ID/identifier</td>
+              </tr>
+              <tr>
+                <td><code>VALIDATION_ERROR</code></td>
+                <td>Invalid input</td>
+                <td>Check required fields</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Caching Section -->
+        <section id="caching">
+          <h2><i class="fa-solid fa-database"></i> Caching</h2>
+
+          <p>The CLI caches frequently-accessed data to reduce API calls:</p>
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Resource</th>
+                <th>TTL</th>
+                <th>Refresh Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Workflow States</td>
+                <td>24 hours</td>
+                <td><code>linear workflow cache --team ENG</code></td>
+              </tr>
+              <tr>
+                <td>Project Statuses</td>
+                <td>24 hours</td>
+                <td><code>linear status cache</code></td>
+              </tr>
+              <tr>
+                <td>Users</td>
+                <td>24 hours</td>
+                <td><code>linear user list --refresh</code></td>
+              </tr>
+              <tr>
+                <td>Labels</td>
+                <td>24 hours</td>
+                <td><code>linear label list --refresh</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Cache Location</h3>
+          <p>Cache files are stored in <code>~/.cache/linear-cli/</code>:</p>
+          <div class="card-code-block">
+            <pre><code>~/.cache/linear-cli/
+  workflows-team-ENG.json
+  statuses-workspace.json
+  users-workspace.json
+  labels-team-ENG.json</code></pre>
+          </div>
+
+          <h3>Clear Cache</h3>
+          <div class="card-code-block">
+            <pre><code># Clear all cache
+rm -rf ~/.cache/linear-cli/
+
+# Or refresh specific resources
+linear workflow cache --team ENG</code></pre>
+          </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="docs-nav-footer">
+          <a href="../index.html" class="nav-prev">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title"><i class="fa-solid fa-arrow-left"></i> Home</span>
+          </a>
+          <a href="commands.html" class="nav-next">
+            <span class="nav-label">Next</span>
+            <span class="nav-title">Command Reference <i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // Sidebar toggle for mobile
+    document.querySelector('[data-sidebar-toggle]')?.addEventListener('click', () => {
+      document.querySelector('.docs-sidebar').classList.toggle('open');
+    });
+
+    // Active link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
