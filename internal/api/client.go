@@ -1298,9 +1298,15 @@ func (c *Client) DeleteIssue(ctx context.Context, issueID string) error {
 }
 
 // SearchIssues searches for issues
-func (c *Client) SearchIssues(ctx context.Context, term string, limit int, includeArchived bool, teamID string) (*SearchIssuesResponse, error) {
+func (c *Client) SearchIssues(ctx context.Context, term string, limit int, includeArchived, includeComments bool, teamID string) (*SearchIssuesResponse, error) {
+	// Build query with optional teamId parameter
+	teamIDClause := ""
+	if teamID != "" {
+		teamIDClause = fmt.Sprintf(`, teamId: %q`, teamID)
+	}
+
 	queryStr := fmt.Sprintf(`query {
-		searchIssues(term: %q, first: %d, includeArchived: %t) {
+		searchIssues(term: %q, first: %d, includeArchived: %t, includeComments: %t%s) {
 			nodes {
 				id
 				identifier
@@ -1330,7 +1336,7 @@ func (c *Client) SearchIssues(ctx context.Context, term string, limit int, inclu
 			}
 			totalCount
 		}
-	}`, term, limit, includeArchived)
+	}`, term, limit, includeArchived, includeComments, teamIDClause)
 
 	var result struct {
 		SearchIssues struct {

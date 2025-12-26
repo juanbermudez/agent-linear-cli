@@ -677,6 +677,7 @@ func newIssueSearchCmd() *cobra.Command {
 	var (
 		limit           int
 		includeArchived bool
+		includeComments bool
 		teamKey         string
 	)
 
@@ -688,7 +689,8 @@ func newIssueSearchCmd() *cobra.Command {
 Examples:
   linear issue search "authentication"
   linear issue search "bug fix" --limit 100
-  linear issue search "old feature" --include-archived`,
+  linear issue search "old feature" --include-archived
+  linear issue search "user feedback" --include-comments`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			query := args[0]
@@ -719,7 +721,7 @@ Examples:
 				}
 			}
 
-			results, err := client.SearchIssues(ctx, query, limit, includeArchived, teamID)
+			results, err := client.SearchIssues(ctx, query, limit, includeArchived, includeComments, teamID)
 			if err != nil {
 				if IsHumanOutput() {
 					output.ErrorHuman(err.Error())
@@ -740,6 +742,7 @@ Examples:
 
 	cmd.Flags().IntVarP(&limit, "limit", "l", 50, "Maximum number of results")
 	cmd.Flags().BoolVar(&includeArchived, "include-archived", false, "Include archived issues")
+	cmd.Flags().BoolVar(&includeComments, "include-comments", false, "Search in issue comments as well")
 	cmd.Flags().StringVarP(&teamKey, "team", "t", "", "Boost results from this team")
 
 	return cmd
