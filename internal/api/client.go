@@ -1721,6 +1721,14 @@ type ProjectsResponse struct {
 	Count    int               `json:"count"`
 }
 
+// SearchProjectsResponse is the response for searching projects
+type SearchProjectsResponse struct {
+	Projects   []ProjectListItem `json:"projects"`
+	TotalCount int               `json:"totalCount"`
+	HasMore    bool              `json:"hasMore"`
+	Query      string            `json:"query"`
+}
+
 // ProjectCreateInput is the input for creating a project
 type ProjectCreateInput struct {
 	Name        string   `json:"name"`
@@ -1847,6 +1855,111 @@ func (c *Client) GetProjects(ctx context.Context, teamID string, limit int) (*Pr
 	return &ProjectsResponse{
 		Projects: projects,
 		Count:    len(projects),
+	}, nil
+}
+
+// SearchProjects searches for projects by term
+func (c *Client) SearchProjects(ctx context.Context, term string, limit int, includeArchived, includeComments bool) (*SearchProjectsResponse, error) {
+	queryStr := fmt.Sprintf(`query {
+		searchProjects(term: %q, first: %d, includeArchived: %t, includeComments: %t) {
+			nodes {
+				id
+				name
+				slugId
+				state
+				progress
+				targetDate
+				url
+				updatedAt
+				status {
+					id
+					name
+					type
+				}
+				lead {
+					id
+					displayName
+				}
+				teams {
+					nodes {
+						key
+					}
+				}
+			}
+			pageInfo {
+				hasNextPage
+			}
+			totalCount
+		}
+	}`, term, limit, includeArchived, includeComments)
+
+	var result struct {
+		SearchProjects struct {
+			Nodes []struct {
+				ID         string  `json:"id"`
+				Name       string  `json:"name"`
+				SlugID     string  `json:"slugId"`
+				State      string  `json:"state"`
+				Progress   float64 `json:"progress"`
+				TargetDate string  `json:"targetDate"`
+				URL        string  `json:"url"`
+				UpdatedAt  string  `json:"updatedAt"`
+				Status     *struct {
+					ID   string `json:"id"`
+					Name string `json:"name"`
+					Type string `json:"type"`
+				} `json:"status"`
+				Lead *struct {
+					ID          string `json:"id"`
+					DisplayName string `json:"displayName"`
+				} `json:"lead"`
+				Teams struct {
+					Nodes []struct {
+						Key string `json:"key"`
+					} `json:"nodes"`
+				} `json:"teams"`
+			} `json:"nodes"`
+			PageInfo struct {
+				HasNextPage bool `json:"hasNextPage"`
+			} `json:"pageInfo"`
+			TotalCount int `json:"totalCount"`
+		} `json:"searchProjects"`
+	}
+
+	if err := c.graphql.Exec(ctx, queryStr, &result, nil); err != nil {
+		return nil, err
+	}
+
+	projects := make([]ProjectListItem, len(result.SearchProjects.Nodes))
+	for i, p := range result.SearchProjects.Nodes {
+		teams := make([]struct {
+			Key string `json:"key"`
+		}, len(p.Teams.Nodes))
+		for j, t := range p.Teams.Nodes {
+			teams[j] = struct {
+				Key string `json:"key"`
+			}{Key: t.Key}
+		}
+		projects[i] = ProjectListItem{
+			ID:         p.ID,
+			Name:       p.Name,
+			SlugID:     p.SlugID,
+			State:      p.State,
+			Progress:   p.Progress,
+			TargetDate: p.TargetDate,
+			URL:        p.URL,
+			UpdatedAt:  p.UpdatedAt,
+			Status:     p.Status,
+			Lead:       p.Lead,
+			Teams:      teams,
+		}
+	}
+
+	return &SearchProjectsResponse{
+		Projects:   projects,
+		TotalCount: result.SearchProjects.TotalCount,
+		HasMore:    result.SearchProjects.PageInfo.HasNextPage,
+		Query:      term,
 	}, nil
 }
 

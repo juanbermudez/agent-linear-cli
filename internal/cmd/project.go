@@ -32,6 +32,7 @@ Examples:
 	cmd.AddCommand(newProjectUpdateCmd())
 	cmd.AddCommand(newProjectDeleteCmd())
 	cmd.AddCommand(newProjectRestoreCmd())
+	cmd.AddCommand(newProjectSearchCmd())
 	cmd.AddCommand(newProjectMilestoneCmd())
 	cmd.AddCommand(newProjectUpdateStatusCmd())
 
@@ -549,6 +550,112 @@ Examples:
 	}
 
 	return cmd
+}
+
+func newProjectSearchCmd() *cobra.Command {
+	var (
+		limit           int
+		includeArchived bool
+		includeComments bool
+	)
+
+	cmd := &cobra.Command{
+		Use:   "search <query>",
+		Short: "Search projects",
+		Long: `Search for projects by text.
+
+Examples:
+  linear project search "authentication"
+  linear project search "Q1" --limit 100
+  linear project search "old project" --include-archived
+  linear project search "user feedback" --include-comments`,
+		Args: cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			query := args[0]
+			ctx := context.Background()
+
+			client, err := api.NewClient(ctx)
+			if err != nil {
+				if IsHumanOutput() {
+					output.ErrorHuman(err.Error())
+					return nil
+				}
+				return output.Error("AUTH_ERROR", err.Error())
+			}
+
+			results, err := client.SearchProjects(ctx, query, limit, includeArchived, includeComments)
+			if err != nil {
+				if IsHumanOutput() {
+					output.ErrorHuman(err.Error())
+					return nil
+				}
+				return output.Error("API_ERROR", err.Error())
+			}
+
+			if IsHumanOutput() {
+				printProjectSearchResultsHuman(results)
+			} else {
+				output.JSON(results)
+			}
+
+			return nil
+		},
+	}
+
+	cmd.Flags().IntVarP(&limit, "limit", "l", 50, "Maximum number of results")
+	cmd.Flags().BoolVar(&includeArchived, "include-archived", false, "Include archived projects")
+	cmd.Flags().BoolVar(&includeComments, "include-comments", false, "Search in project comments as well")
+
+	return cmd
+}
+
+func printProjectSearchResultsHuman(results *api.SearchProjectsResponse) {
+	if len(results.Projects) == 0 {
+		output.HumanLn("No projects found for %q", results.Query)
+		return
+	}
+
+	headers := []string{"SLUG", "NAME", "STATUS", "LEAD", "TEAMS", "UPDATED"}
+	rows := make([][]string, len(results.Projects))
+
+	for i, p := range results.Projects {
+		name := p.Name
+		if len(name) > 40 {
+			name = name[:37] + "..."
+		}
+
+		status := p.State
+		if p.Status != nil {
+			status = p.Status.Name
+		}
+
+		lead := "-"
+		if p.Lead != nil {
+			lead = p.Lead.DisplayName
+		}
+
+		teams := ""
+		for j, t := range p.Teams {
+			if j > 0 {
+				teams += ", "
+			}
+			teams += t.Key
+		}
+
+		updated := p.UpdatedAt
+		if t, err := time.Parse(time.RFC3339, p.UpdatedAt); err == nil {
+			updated = display.TimeAgo(t)
+		}
+
+		rows[i] = []string{p.SlugID, name, status, lead, teams, updated}
+	}
+
+	output.Table(headers, rows)
+	output.HumanLn("")
+	output.HumanLn("Found %d result(s) for %q", results.TotalCount, results.Query)
+	if results.HasMore {
+		output.HumanLn("Showing first %d results. Increase --limit to see more.", len(results.Projects))
+	}
 }
 
 func newProjectMilestoneCmd() *cobra.Command {
